@@ -1,32 +1,39 @@
-name: MSDO windows-latest
+name: MSDO Windows-latest
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   sample:
     # MSDO runs on windows-latest and ubuntu-latest.
-    # macos-latest supporting coming soon
+    # macos-latest support coming soon.
     runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - uses: actions/setup-dotnet@v3
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up .NET SDK
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: |
             5.0.x
             6.0.x
 
-      # Run analyzers
+      # Step 3: Run Microsoft Security DevOps Analysis
       - name: Run Microsoft Security DevOps Analysis
         uses: microsoft/security-devops-action@preview
         id: msdo
 
-      # Upload alerts to the Security tab
+      # Step 4: Upload alerts to the Security tab
       - name: Upload alerts to Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
